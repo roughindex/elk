@@ -1,0 +1,33 @@
+version: "3"
+services:
+
+  elastic:
+    build:
+      context: ./elastic
+      dockerfile: Dockerfile
+    volumes:
+      - "./mnt/elk/log:/vol/log/elasticsearch"
+      - "./mnt/elk/lib:/vol/lib/elasticsearch"
+    environment: 
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    #Only expose elastic for debugging purposes
+    #ports: 
+    #  - "9200:9200"
+      
+  kibana:
+    build:
+      context: ./kibana
+      dockerfile: Dockerfile
+    depends_on:
+      - elastic
+    ports: 
+      - "5601:5601"
+
+  logstash:
+    build:
+      context: ./logstash
+      dockerfile: Dockerfile
+    depends_on:
+      - elastic
+    ports:
+      - "5044:5044"
