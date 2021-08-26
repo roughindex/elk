@@ -10,7 +10,8 @@ RUN printf "[elasticsearch]\nname=Elasticsearch repository for 7.x packages\nbas
     metricbeat modules enable docker && \
     printf "output.logstash:\n    hosts: ["logstash:5044"]" >> /etc/metricbeat/metricbeat.yml && \
     mkdir /config && \
-    chown -R logstash /config /usr/share/logstash
+    chown -R logstash /config /usr/share/logstash && \
+    rm -rf /usr/share/logstash/vendor/bundle/jruby/2.5.0/gems/rubyzip-1.3.0/test
 
 COPY logstash*.conf /config/
 
