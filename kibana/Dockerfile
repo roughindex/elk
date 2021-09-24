@@ -12,6 +12,10 @@ RUN printf "[elasticsearch]\nname=Elasticsearch repository for 7.x packages\nbas
     rpm --rebuilddb 
 
 ENV PATH /usr/share/kibana/bin:$PATH
+
+#The start script waits for ElasticSearch to start, sets up Beats schemas, then starts Kibana
+COPY start /usr/share/kibana/
+
 RUN chown -R 1001:0 /usr/share/kibana && \
     chown -R 1001:0 /var/log/kibana && \
     chown -R 1001:0 /var/lib/kibana && \
@@ -24,14 +28,12 @@ RUN chown -R 1001:0 /usr/share/kibana && \
     chown -R 1001:0 /var/log && \
     chown -R 1001:0 /var/lib && \
     chown -R 1001:0 /etc/metricbeat && \
-    chown -R 1001:0 /etc/filebeat
+    chown -R 1001:0 /etc/filebeat && \
+    chmod +x /usr/share/kibana/start
 
 WORKDIR /usr/share/kibana
 
 EXPOSE 5601
 USER 1001
-
-#The start script waits for ElasticSearch to start, sets up Beats schemas, then starts Kibana
-COPY start .
 
 CMD ./start
